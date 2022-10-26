@@ -5,11 +5,13 @@ terraform {
       version = "~> 4.3"
     }
   }
-backend "s3" {
-    key     = "state"
-    encrypt = true
-  }
 }
-provider "aws" {
-  # Configuration options
-}
+# # backend "s3" {
+# #     key     = "state"
+# #     encrypt = true
+# #   }
+# # }
+# provider "aws" {
+#   # Configuration options
+#  }
+# } 
