@@ -93,3 +93,21 @@ variable "vpc_security_group_ids" {
   description = "Security group IDs to allow access to the VPC. It will be used only if vpc_id is set."
   default     = null
 }
+
+variable "mlflow_username" {
+  description = "Username used in basic authentication provided by nginx."
+  type = string
+  default = "mlflow"
+}
+
+variable "service_cpu" {
+  type        = number
+  default     = 1024
+  description = "The number of CPU units reserved for the MLflow container."
+}
+
+variable "service_memory" {
+  type        = number
+  default     = 2048
+  description = "The amount of memory (MiB) reserved for the MLflow container."
+}
