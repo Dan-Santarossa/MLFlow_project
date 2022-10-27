@@ -5,64 +5,62 @@ resource "random_password" "mlflow_password" {
 }
 
 resource "aws_apprunner_service" "mlflow_server" {
-  service_name = local.name
+  service_name = "${local.name}"
 
   source_configuration {
     auto_deployments_enabled = false
 
     image_repository {
-      image_identifier      = "public.ecr.aws/t9j8s4z8/mlflow:1.30.0"
+      image_identifier      = "public.ecr.aws/t9j8s4z8/mlflow:${var.mlflow_version}"
       image_repository_type = "ECR_PUBLIC"
+
       image_configuration {
         port = local.app_port
-        image_configuration {
-          port = local.app_port
-          runtime_environment_variables = {
-            "MLFLOW_ARTIFACT_URI"               = "s3://${module.s3.artifact_bucket_id}"
-            "MLFLOW_DB_DIALECT"                 = "postgresql"
-            "MLFLOW_DB_USERNAME"                = "${aws_rds_cluster.mlflow_backend_store.master_username}"
-            "MLFLOW_DB_PASSWORD"                = "${random_password.mlflow_backend_store.result}"
-            "MLFLOW_DB_HOST"                    = "${aws_rds_cluster.mlflow_backend_store.endpoint}"
-            "MLFLOW_DB_PORT"                    = "${aws_rds_cluster.mlflow_backend_store.port}"
-            "MLFLOW_DB_DATABASE"                = "${aws_rds_cluster.mlflow_backend_store.database_name}"
-            "MLFLOW_TRACKING_USERNAME"          = var.mlflow_username
-            "MLFLOW_TRACKING_PASSWORD"          = local.mlflow_password
-            "MLFLOW_SQLALCHEMYSTORE_POOL_CLASS" = "NullPool"
+        runtime_environment_variables = {
+          "MLFLOW_ARTIFACT_URI" = "s3://${module.s3.artifact_bucket_id}"
+          "MLFLOW_DB_DIALECT" = "postgresql"
+          "MLFLOW_DB_USERNAME" = "${aws_rds_cluster.mlflow_backend_store.master_username}"
+          "MLFLOW_DB_PASSWORD" = "${random_password.mlflow_backend_store.result}"
+          "MLFLOW_DB_HOST" = "${aws_rds_cluster.mlflow_backend_store.endpoint}"
+          "MLFLOW_DB_PORT" = "${aws_rds_cluster.mlflow_backend_store.port}"
+          "MLFLOW_DB_DATABASE" = "${aws_rds_cluster.mlflow_backend_store.database_name}"
+          "MLFLOW_TRACKING_USERNAME" = var.mlflow_username
+          "MLFLOW_TRACKING_PASSWORD" = local.mlflow_password
+          "MLFLOW_SQLALCHEMYSTORE_POOL_CLASS" = "NullPool"
           }
-        }
+        }    
       }
+  }
+
+  instance_configuration {
+    cpu = var.service_cpu
+    memory = var.service_memory
+    instance_role_arn = aws_iam_role.mlflow_iam_role.arn
+  }
+
+  network_configuration {
+    egress_configuration {
+      egress_type       = "VPC"
+      vpc_connector_arn = aws_apprunner_vpc_connector.connector.arn
     }
   }
-}
 
-instance_configuration {
-  cpu               = var.service_cpu
-  memory            = var.service_memory
-  instance_role_arn = aws_iam_role.mlflow_iam_role.arn
-}
-
-network_configuration {
-  egress_configuration {
-    egress_type       = "VPC"
-    vpc_connector_arn = aws_apprunner_vpc_connector.connector.arn
+  health_check_configuration {
+    healthy_threshold   = 1
+    unhealthy_threshold = 5
+    interval            = 20
+    timeout             = 20
+    path                = "/health"
+    protocol            = "HTTP"
   }
-}
 
-health_check_configuration {
-  healthy_threshold   = 1
-  unhealthy_threshold = 5
-  interval            = 20
-  timeout             = 20
-  path                = "/health"
-  protocol            = "HTTP"
+  tags = merge(
+    {
+        Name = "${local.name}"
+    },
+    local.tags
+  )
 }
-
-tags = merge(
-  {
-    Name = "${local.name}"
-  },
-  local.tags
-)
 
 resource "aws_security_group" "mlflow_server_sg" {
   count       = local.create_dedicated_vpc ? 1 : 0

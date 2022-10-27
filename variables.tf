@@ -57,3 +57,39 @@ variable "mlflow_version" {
   type        = string
   default     = "latest"
 }
+
+variable "db_deletion_protection" {
+  type        = bool
+  default     = true
+  description = "(Optional) If true, this module will not delete the database after terminating."
+}
+
+variable "db_min_capacity" {
+  type        = number
+  default     = 2
+  description = "The minimum capacity for the Aurora Serverless cluster. Aurora will scale automatically in this range. See: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless.how-it-works.html"
+}
+
+variable "db_max_capacity" {
+  type        = number
+  default     = 64
+  description = "The maximum capacity for the Aurora Serverless cluster. Aurora will scale automatically in this range. See: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless.how-it-works.html"
+}
+
+variable "db_auto_pause" {
+  type        = bool
+  default     = true
+  description = "The Aurora Serverless cluster will be paused after a given amount of time with no activity. https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless.how-it-works.html#aurora-serverless.how-it-works.pause-resume"
+}
+
+variable "db_auto_pause_seconds" {
+  type        = number
+  default     = 1800
+  description = "The number of seconds to wait before automatically pausing the Aurora Serverless cluster. This is only used if rds_auto_pause is true."
+}
+
+variable "vpc_security_group_ids" {
+  type        = list(string)
+  description = "Security group IDs to allow access to the VPC. It will be used only if vpc_id is set."
+  default     = null
+}
