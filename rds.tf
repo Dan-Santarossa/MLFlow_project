@@ -9,8 +9,8 @@ resource "aws_security_group" "rds" {
   tags   = local.tags
 
 ingress {
-    from_port       = db_port
-    to_port         = db_port
+    from_port       = local.db_port
+    to_port         = local.db_port
     protocol        = "tcp"
     security_groups = [aws_security_group.ecs_service.id]
 }
