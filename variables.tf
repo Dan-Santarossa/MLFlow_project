@@ -51,3 +51,9 @@ variable "db_subnet_ids" {
   default     = null
   description = "List of subnets where the RDS database will be deployed"
 }
+
+variable "mlflow_version" {
+  description = "The mlflow-server version to use."
+  type = string
+  default = "latest"
+}
