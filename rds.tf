@@ -38,3 +38,4 @@ resource "aws_rds_cluster" "mlflow_backend_store" {
     auto_pause               = var.db_auto_pause
     seconds_until_auto_pause = var.db_auto_pause_seconds
   }
+}
