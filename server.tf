@@ -15,8 +15,22 @@ resource "aws_apprunner_service" "mlflow_server" {
       image_repository_type = "ECR_PUBLIC"
       image_configuration {
         port = local.app_port
+        image_configuration {
+          port = local.app_port
+          runtime_environment_variables = {
+            "MLFLOW_ARTIFACT_URI"               = "s3://${module.s3.artifact_bucket_id}"
+            "MLFLOW_DB_DIALECT"                 = "postgresql"
+            "MLFLOW_DB_USERNAME"                = "${aws_rds_cluster.mlflow_backend_store.master_username}"
+            "MLFLOW_DB_PASSWORD"                = "${random_password.mlflow_backend_store.result}"
+            "MLFLOW_DB_HOST"                    = "${aws_rds_cluster.mlflow_backend_store.endpoint}"
+            "MLFLOW_DB_PORT"                    = "${aws_rds_cluster.mlflow_backend_store.port}"
+            "MLFLOW_DB_DATABASE"                = "${aws_rds_cluster.mlflow_backend_store.database_name}"
+            "MLFLOW_TRACKING_USERNAME"          = var.mlflow_username
+            "MLFLOW_TRACKING_PASSWORD"          = local.mlflow_password
+            "MLFLOW_SQLALCHEMYSTORE_POOL_CLASS" = "NullPool"
+          }
+        }
       }
     }
   }
 }
-
