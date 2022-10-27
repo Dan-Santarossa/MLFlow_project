@@ -12,10 +12,10 @@ resource "aws_vpc" "mlflow_vpc" {
 }
 
 resource "aws_subnet" "mlflow_public_subnet" {
-  count                   = local.create_dedicated_vpc ? length(local.availability_zones) : 0
-  vpc_id                  = local.vpc_id
-  cidr_block              = "10.0.${10+count.index}.0/24"
-  availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
+  count             = local.create_dedicated_vpc ? length(local.availability_zones) : 0
+  vpc_id            = local.vpc_id
+  cidr_block        = "10.0.${10 + count.index}.0/24"
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
     Name = "${local.name}-public-subnet"
@@ -55,9 +55,9 @@ resource "aws_vpc_endpoint" "mlflow_endpoint" {
   count  = local.create_dedicated_vpc ? 1 : 0
   vpc_id = local.vpc_id
 
-  service_name = "com.amazonaws.${var.aws_region}.s3"
+  service_name      = "com.amazonaws.${var.aws_region}.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids = [aws_route_table.mlflow_crt.0.id]
+  route_table_ids   = [aws_route_table.mlflow_crt.0.id]
 
   tags = {
     Name = "${local.name}-endpoint"

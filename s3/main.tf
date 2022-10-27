@@ -30,7 +30,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_encryption
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm     = "AES256"
+      sse_algorithm = "AES256"
     }
   }
 }
@@ -48,7 +48,7 @@ resource "aws_s3_bucket" "mlflow_artifact_store" {
 
   tags = merge(
     {
-        Name = "${var.name}-bucket"
+      Name = "${var.name}-bucket"
     },
     var.tags
   )
