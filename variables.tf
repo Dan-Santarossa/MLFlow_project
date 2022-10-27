@@ -7,5 +7,5 @@ variable "tags" {
 variable "unique_name" {
   type        = string
   description = "Unique name for this application"
-  default     = "oauth2-mlflow"
+  default     = "mlflow-project"
 }

@@ -5,7 +5,7 @@ locals {
   tags = merge(
     {
       "env"     = "dev"
-      "project" = "oauth2-mlflow"
+      "project" = "mlflow-project"
     },
     var.tags
   )
