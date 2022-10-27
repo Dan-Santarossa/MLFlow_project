@@ -45,3 +45,9 @@ variable "tags" {
   description = "(Optional) AWS Tags common to all the resources created."
   default = {}
 }
+
+variable "db_subnet_ids" {
+  type        = list(string)
+  default     = null
+  description = "List of subnets where the RDS database will be deployed"
+}
