@@ -1,3 +1,5 @@
+## -- server.tf
+
 resource "random_password" "mlflow_password" {
   length           = 16
   special          = true
@@ -5,7 +7,7 @@ resource "random_password" "mlflow_password" {
 }
 
 resource "aws_apprunner_service" "mlflow_server" {
-  service_name = "${local.name}"
+  service_name = local.name
 
   source_configuration {
     auto_deployments_enabled = false
@@ -17,24 +19,24 @@ resource "aws_apprunner_service" "mlflow_server" {
       image_configuration {
         port = local.app_port
         runtime_environment_variables = {
-          "MLFLOW_ARTIFACT_URI" = "s3://${module.s3.artifact_bucket_id}"
-          "MLFLOW_DB_DIALECT" = "postgresql"
-          "MLFLOW_DB_USERNAME" = "${aws_rds_cluster.mlflow_backend_store.master_username}"
-          "MLFLOW_DB_PASSWORD" = "${random_password.mlflow_backend_store.result}"
-          "MLFLOW_DB_HOST" = "${aws_rds_cluster.mlflow_backend_store.endpoint}"
-          "MLFLOW_DB_PORT" = "${aws_rds_cluster.mlflow_backend_store.port}"
-          "MLFLOW_DB_DATABASE" = "${aws_rds_cluster.mlflow_backend_store.database_name}"
-          "MLFLOW_TRACKING_USERNAME" = var.mlflow_username
-          "MLFLOW_TRACKING_PASSWORD" = local.mlflow_password
+          "MLFLOW_ARTIFACT_URI"               = "s3://${module.s3.artifact_bucket_id}"
+          "MLFLOW_DB_DIALECT"                 = "postgresql"
+          "MLFLOW_DB_USERNAME"                = "${aws_rds_cluster.mlflow_backend_store.master_username}"
+          "MLFLOW_DB_PASSWORD"                = "${random_password.mlflow_backend_store.result}"
+          "MLFLOW_DB_HOST"                    = "${aws_rds_cluster.mlflow_backend_store.endpoint}"
+          "MLFLOW_DB_PORT"                    = "${aws_rds_cluster.mlflow_backend_store.port}"
+          "MLFLOW_DB_DATABASE"                = "${aws_rds_cluster.mlflow_backend_store.database_name}"
+          "MLFLOW_TRACKING_USERNAME"          = var.mlflow_username
+          "MLFLOW_TRACKING_PASSWORD"          = local.mlflow_password
           "MLFLOW_SQLALCHEMYSTORE_POOL_CLASS" = "NullPool"
-          }
-        }    
+        }
       }
+    }
   }
 
   instance_configuration {
-    cpu = var.service_cpu
-    memory = var.service_memory
+    cpu               = var.service_cpu
+    memory            = var.service_memory
     instance_role_arn = aws_iam_role.mlflow_iam_role.arn
   }
 
@@ -56,7 +58,7 @@ resource "aws_apprunner_service" "mlflow_server" {
 
   tags = merge(
     {
-        Name = "${local.name}"
+      Name = "${local.name}"
     },
     local.tags
   )
