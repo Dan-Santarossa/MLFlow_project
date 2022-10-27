@@ -96,8 +96,14 @@ variable "vpc_security_group_ids" {
 
 variable "mlflow_username" {
   description = "Username used in basic authentication provided by nginx."
+  type        = string
+  default     = "mlflow"
+}
+
+variable "mlflow_password" {
+  description = "Password used in basic authentication provided by nginx. If not specified, this module will create a strong password for you."
   type = string
-  default = "mlflow"
+  default = null
 }
 
 variable "service_cpu" {
