@@ -14,4 +14,8 @@ module "vpc" {
   public_subnets   = ["10.1.11.0/24", "10.1.12.0/24"]
   database_subnets = ["10.1.201.0/24", "10.1.202.0/24"]
 
+enable_nat_gateway = false
+
+tags = local.tags
+
 }
