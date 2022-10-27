@@ -54,6 +54,6 @@ variable "db_subnet_ids" {
 
 variable "mlflow_version" {
   description = "The mlflow-server version to use."
-  type = string
-  default = "latest"
+  type        = string
+  default     = "latest"
 }
