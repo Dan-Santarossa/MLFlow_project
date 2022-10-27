@@ -41,8 +41,8 @@ resource "aws_rds_cluster" "mlflow_backend_store" {
 }
 
 tags = merge(
-    {
-      Name = "${local.name}-rds"
-    },
-    local.tags
+  {
+    Name = "${local.name}-rds"
+  },
+  local.tags
 )
