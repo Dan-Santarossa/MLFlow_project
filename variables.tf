@@ -55,7 +55,7 @@ variable "mlflow_version" {
 
 variable "db_deletion_protection" {
   type        = bool
-  default     = true
+  default     = false
   description = "(Optional) If true, this module will not delete the database after terminating."
 }
 
@@ -97,8 +97,8 @@ variable "mlflow_username" {
 
 variable "mlflow_password" {
   description = "Password used in basic authentication provided by nginx. If not specified, this module will create a strong password for you."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "service_cpu" {
