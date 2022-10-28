@@ -37,7 +37,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_encryption
 
 resource "aws_s3_bucket_acl" "bucket_acl" {
   count  = var.create_dedicated_bucket ? 1 : 0
-  bucket = aws_s3_bucket.mlflow_artifact_store.0.id
+  bucket = aws_s3_bucket.mlflow_artifact_store.1.id
   acl    = "private"
 }
 
