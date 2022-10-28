@@ -12,7 +12,7 @@ output "mlflow_username" {
 
 output "mlflow_password" {
   value     = local.mlflow_password ##should mark sensitive
-  sensitive = false
+  sensitive = true
 }
 
 output "status" {
