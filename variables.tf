@@ -34,11 +34,6 @@ variable "artifact_bucket_id" {
   description = "If specified, MLflow will use this bucket to store artifacts. Otherwise, this module will create a dedicated bucket. When overriding this value, you need to enable the task role to access the root you specified."
 }
 
-variable "mlflow_password" {
-  description = "Password used in basic authentication provided by nginx. If not specified, this module will create a strong password for you."
-  type        = string
-  default     = null
-}
 
 variable "tags" {
   type        = map(string)
