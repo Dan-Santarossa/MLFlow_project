@@ -20,7 +20,7 @@ locals {
   create_dedicated_vpc = var.vpc_id == null
   vpc_id               = local.create_dedicated_vpc ? aws_vpc.mlflow_vpc.0.id : var.vpc_id
 
-  # S3 bucket
+  #S3 bucket 
   create_dedicated_bucket = var.artifact_bucket_id == null
   artifact_bucket_id      = local.create_dedicated_bucket ? module.s3.artifact_bucket_id : var.artifact_bucket_id
 
